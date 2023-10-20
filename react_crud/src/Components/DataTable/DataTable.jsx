@@ -29,7 +29,7 @@ const DataTable = (props) => {
 
     const handleDelete = (id) => {
         swal({
-            title: "Are you sure?",
+            title: "Are you sure? ",
             text: "Once deleted, you will not be able to recover this Data",
             icon: "warning",
             buttons: true,

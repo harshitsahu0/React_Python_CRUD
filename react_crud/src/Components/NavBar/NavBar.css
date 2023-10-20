@@ -1,0 +1,49 @@
+td {
+    padding: 10px;
+}
+
+table {
+    margin: auto;
+    border-spacing: 10px;
+}
+
+#navbar {
+    height: 100px;
+    padding-top: 10px;
+    background: rgba(55, 20, 68, 0.884);
+}
+
+#navbar a img {
+    border-radius: 50%;
+    margin-left: 40px;
+}
+
+#navbar a {
+    color: beige;
+    display: inline;
+}
+
+#navbar h1 {
+    font-size: 50px;
+    margin-left: 10px;
+    display: inline;
+}
+
+#navbar div button {
+    float: right;
+    margin-top: 20px;
+    margin-right: 60px;
+}
+
+#table_row:nth-child(even) {
+    background: #c074e38a;
+}
+
+#tr_th {
+    background: #18111dd8;
+}
+
+#tr_th th {
+    padding: 20px;
+    color: white;
+}

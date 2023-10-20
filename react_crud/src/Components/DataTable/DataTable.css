@@ -1,0 +1,82 @@
+.mainDataTable{
+    margin: auto;
+}
+#updateBtn{
+    border: none;
+    background-color: rgba(43, 168, 43, 0.918);
+    color: white;
+    font-size: 20px;
+    border-radius: 5px;
+}
+
+#deleteBtn{
+    border: none;
+    background-color: rgba(252, 35, 35, 0.856);
+    color: white;
+    font-size: 20px;
+    border-radius: 5px;
+}
+
+.PaginationMain{
+    margin: 30px auto 0px auto;
+}
+
+.pagination .active {
+    background-color: #008083;
+    color: white;
+}
+
+.pagination{
+    margin: 20px auto 0px auto;
+    align-items: center;
+}
+
+.mainPage{
+    margin: auto;
+}
+
+.pagination .next-prev-btn{
+    border-radius: 5px 0px;
+}
+
+.pagination .next-prev-btn:enabled{
+    background-color: #008083;
+    color: white;
+}
+
+.pagination .next-prev-btn:disabled{
+    background-color: rgba(225, 226, 226, 0.769);
+}
+
+.pagination button {
+    margin-right: 20px;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.mainSearchDiv{
+    margin: auto auto 20px auto;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: rgba(210, 214, 215, 0.381);
+    box-shadow: 0px 0.8px 2px rgba(0, 0, 0, .032), 0px 2.7px 6.7px rgba(0, 0, 0, .048), 0px 12px 30px rgba(0, 0, 0, .08);
+    z-index: -1;
+}
+
+#srchInpt{
+    width: 100%;
+    height: 100%;
+    font-size: 18px;
+    padding: 5px 8px 5px 5px;
+    border-radius: 5px;
+    border: none;
+}
+#srchInpt:focus{
+    outline: none;
+}
+
+.th{
+    padding: 10px;
+}

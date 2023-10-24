@@ -25,7 +25,6 @@ const DataTable = (props) => {
         return totalNumPages;
     }
     const [totalSrchRst, setTotalSrchRst] = useState();
-    // const totalSrchRst = Math.ceil(searchRst / 8);
     const getPageNumbersSrchRst = () => {
         const totalNumPages = [];
         for (let i = 1; i <= totalSrchRst; i++) {
@@ -48,7 +47,6 @@ const DataTable = (props) => {
             dangerMode: true,
         }).then((willDelete) => {
             if (willDelete) {
-
                 swal("successfull!", "Your details deleted!", "success");
                 axios.delete(`http://127.0.0.1:8000/api/companies/${id}/`).then((res) => {
                     console.log(res);
@@ -80,12 +78,6 @@ const DataTable = (props) => {
                 document.getElementById("pTag").style.display = "block"
             }
         }
-        // if (values.length === 0) {
-        //     setSrchState(false);
-        // } else {
-        //     setSrchState(true);
-        // }
-
 
         if (e.target.value === "") {
             setSrchState(false);

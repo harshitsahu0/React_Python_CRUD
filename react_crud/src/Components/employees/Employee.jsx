@@ -3,13 +3,11 @@ import { useParams } from "react-router-dom";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { Space } from "antd";
 import swal from "sweetalert";
-
 import axios from "axios";
 import "./Style.css";
 
 function Employee() {
   const { id, cmpName } = useParams();
-  //   debugger
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [Email, setEmail] = useState("");
@@ -20,7 +18,6 @@ function Employee() {
   const [empId, setEmpId] = useState();
 
   const handleUpdate = () => {
-    debugger
     const formData = new FormData();
     formData.append("first_name", firstName);
     formData.append("last_name", lastName);
@@ -34,11 +31,7 @@ function Employee() {
         getEmployeesData();
         swal("successfull!", "Your details updated!", "success");
       });
-
     document.getElementById("subBtn").innerHTML = "Submit";
-
-    // debugger
-    // console.log(empId);
   };
 
   const handleSubmit = () => {
@@ -57,7 +50,6 @@ function Employee() {
       formData.append("phone", Phnum);
       formData.append("hire_date", hireDate);
       formData.append("company", JSON.parse(id));
-
       axios
         .post("http://127.0.0.1:8000/api/employees/", formData)
         .then((res) => {
@@ -65,7 +57,6 @@ function Employee() {
           getEmployeesData();
           swal("successfull!", "Your details Submited!", "success");
         });
-
       setFirstName("");
       setLastName("");
       setEmail("");
@@ -94,8 +85,6 @@ function Employee() {
     setHireDate(updtData[0].hire_date);
     setEmpId(id);
     document.getElementById("subBtn").innerHTML = "Update";
-    // document.getElementById("subBtn")
-    // .addEventListener("click", () => handleUpdate(id));
     setUpdate(true);
   };
 

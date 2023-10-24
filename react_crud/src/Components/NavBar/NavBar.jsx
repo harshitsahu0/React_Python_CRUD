@@ -12,7 +12,7 @@ const NavBar = () => {
     const [foundDate, setFoundDate] = useState("");
     const [headLocation, setHeadLocation] = useState("");
     const [update, setUpdate] = useState(false);
-    const [id, setId] =useState();
+    const [id, setId] = useState();
     const [data, setData] = useState([]);
 
     const getData = () => {
@@ -27,12 +27,12 @@ const NavBar = () => {
         formData.append("description", ComDescription);
         formData.append("founded_date", foundDate);
         formData.append("headquarters_location", headLocation);
-        axios.put(`http://127.0.0.1:8000/api/companies/${id}/`,formData).then((res) => {
+        axios.put(`http://127.0.0.1:8000/api/companies/${id}/`, formData).then((res) => {
             console.log(res);
             swal("successfull!", "Your details updated!", "success");
             getData();
         })
-        console.log("id :",id);
+        console.log("id :", id);
         console.log("hit");
         const submitBtn = document.getElementById("createBtn");
         submitBtn.innerHTML = "Submit";
@@ -135,7 +135,7 @@ const NavBar = () => {
                                         </td>
                                         <td>
                                             <select name="Country" id="Country" value={headLocation} onChange={(e) => setHeadLocation(e.target.value)}>
-                                                <option value="" selected disabled>select Location</option>
+                                                <option value="" defaultValue disabled>select Location</option>
                                                 <option value="Indore">Indore</option>
                                                 <option value="Bhopal">Bhopal</option>
                                                 <option value="Pune">Pune</option>

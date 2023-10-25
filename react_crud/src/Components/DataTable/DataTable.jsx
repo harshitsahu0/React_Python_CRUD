@@ -57,6 +57,7 @@ const DataTable = (props) => {
             }
         });
     }
+    
     const handleSearch = (e) => {
         setSearch(e.target.value);
         var values = props.data.filter((item) => item.name.toString().toLowerCase().includes(e.target.value.toString().toLowerCase()) || item.description.toString().toLowerCase().includes(e.target.value.toString().toLowerCase()) || item.founded_date.toString().toLowerCase().includes(e.target.value.toString().toLowerCase()) || item.headquarters_location.toString().toLowerCase().includes(e.target.value.toString().toLowerCase()));
@@ -92,7 +93,7 @@ const DataTable = (props) => {
                 srchState ?
                     <>
                         {
-                            searchRst.length == 0
+                            searchRst.length === 0
                                 ? <div id='pTag'><p>No search result Found</p></div>
                                 : <table className="table table-success table-striped">
                                     <thead>
@@ -112,7 +113,7 @@ const DataTable = (props) => {
                                             return (
                                                 <tr key={item.id}>
                                                     <th scope="row">{itemIndex}</th>
-                                                    <td>{item.name}</td>
+                                                    <td><Link id='lnk' to={`/employee/${item.id}/${item.name}`}>{item.name}</Link></td>
                                                     <td>{item.description}</td>
                                                     <td>{item.founded_date}</td>
                                                     <td>{item.headquarters_location}</td>
@@ -167,7 +168,7 @@ const DataTable = (props) => {
                                         return (
                                             <tr key={item.id}>
                                                 <th scope="row">{itemIndex}</th>
-                                                <td> <Link to={`/employee/${item.id}/${item.name}`}>{item.name}</Link></td>
+                                                <td> <Link id='lnk' to={`/employee/${item.id}/${item.name}`}>{item.name}</Link></td>
                                                 <td>{item.description}</td>
                                                 <td>{item.founded_date}</td>
                                                 <td>{item.headquarters_location}</td>

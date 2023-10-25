@@ -16,6 +16,52 @@ function Employee() {
   const [emplyData, setEmplyData] = useState([]);
   const [update, setUpdate] = useState(false);
   const [empId, setEmpId] = useState();
+  const [isValid, setIsValid] = useState(false);
+
+
+
+  const validation = () => {
+    const emailRegex = /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/;
+    var pattern = new RegExp(/^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/i);
+    if (firstName.length === 0) {
+      alert("please enter your First name");
+      setIsValid(false);
+      return false
+    }
+    if (lastName.length === 0) {
+      alert("please enter your Last name");
+      setIsValid(false);
+      return false
+    }
+    if (!emailRegex.test(Email)) {
+      alert("Please enter a valid email");
+      setIsValid(false);
+      return false
+    }
+    if (Email.length === 0) {
+      alert("Please enter a email");
+      setIsValid(false);
+      return false
+    }
+    if (!pattern.test(Phnum)) {
+      alert("please enter valid number");
+      setIsValid(false);
+      return false
+    }
+    if (Phnum.length !== 10 || Phnum.length === 0) {
+      alert("number should be of 10 digits");
+      setIsValid(false);
+      return false
+    }
+    if(hireDate.length==0){
+      alert("please enter your date of birth");
+      setIsValid(false);
+      return false
+    }
+    // setIsValid(true);
+    return true;
+  }
+
 
   const handleUpdate = () => {
     const formData = new FormData();
@@ -31,37 +77,44 @@ function Employee() {
         getEmployeesData();
         swal("successfull!", "Your details updated!", "success");
       });
+      setUpdate(false);
     document.getElementById("subBtn").innerHTML = "Submit";
+    document.getElementById("Rgstr").innerHTML = "Register";
   };
 
   const handleSubmit = () => {
+    const valid = validation();
     if (update) {
-      handleUpdate();
-      setFirstName("");
-      setLastName("");
-      setEmail("");
-      setPhnum("");
-      setHireDate("");
+      if(valid){
+        handleUpdate();
+        setFirstName("");
+        setLastName("");
+        setEmail("");
+        setPhnum("");
+        setHireDate("");
+      }
     } else {
-      const formData = new FormData();
-      formData.append("first_name", firstName);
-      formData.append("last_name", lastName);
-      formData.append("email", Email);
-      formData.append("phone", Phnum);
-      formData.append("hire_date", hireDate);
-      formData.append("company", JSON.parse(id));
-      axios
-        .post("http://127.0.0.1:8000/api/employees/", formData)
-        .then((res) => {
-          console.log(res);
-          getEmployeesData();
-          swal("successfull!", "Your details Submited!", "success");
-        });
-      setFirstName("");
-      setLastName("");
-      setEmail("");
-      setPhnum("");
-      setHireDate("");
+      if(valid){
+        const formData = new FormData();
+        formData.append("first_name", firstName);
+        formData.append("last_name", lastName);
+        formData.append("email", Email);
+        formData.append("phone", Phnum);
+        formData.append("hire_date", hireDate);
+        formData.append("company", JSON.parse(id));
+        axios
+          .post("http://127.0.0.1:8000/api/employees/", formData)
+          .then((res) => {
+            console.log(res);
+            getEmployeesData();
+            swal("successfull!", "Your details Submited!", "success");
+          });
+        setFirstName("");
+        setLastName("");
+        setEmail("");
+        setPhnum("");
+        setHireDate("");
+      }
     }
   };
 
@@ -86,6 +139,7 @@ function Employee() {
     setEmpId(id);
     document.getElementById("subBtn").innerHTML = "Update";
     setUpdate(true);
+    document.getElementById("Rgstr").innerHTML = "Update";
   };
 
   useEffect(() => {
@@ -116,13 +170,13 @@ function Employee() {
 
   return (
     <div className="MainEmply ">
-      <marquee behavior="alternate" direction="Right">
+      {/* <marquee behavior="alternate" direction="Right"> */}
         <h1 className="cmpName">WELCOME TO {cmpName.toUpperCase()}</h1>
-      </marquee>
+      {/* </marquee> */}
       <div className="col-lg-6 mainRegForm">
-        <div className=" row container-fluid">
-          <h1>Register</h1>
-          <div className="col-lg-6">
+        <div className=" row container-fluid rowDiv">
+          <h1 id="Rgstr">Register</h1>
+          <div className="col-lg-6 leftDiv">
             <label htmlFor="first_name" className="label">
               First Name :{" "}
             </label>
@@ -152,9 +206,10 @@ function Employee() {
               className="inptfld"
               value={hireDate}
               onChange={(e) => setHireDate(e.target.value)}
+              style={{marginLeft:"-20px"}}
             />
           </div>
-          <div className="col-lg-6">
+          <div className="col-lg-6 rightDiv">
             <label htmlFor="" className="label">
               Last Name :{" "}
             </label>
@@ -181,6 +236,93 @@ function Employee() {
           </button>
         </div>
       </div>
+
+{/* <div className="RegFrom col-lg-4">
+        <table className="EmpTbl">
+          <tbody>
+            <tr>
+              <th colSpan={2} id="th">
+                Register
+              </th>
+            </tr>
+            <tr>
+              <td>
+                <h5> First Name:</h5>
+              </td>
+              <td>
+                <input
+                  type="text"
+                  id="first_name"
+                  placeholder="Enter company_Name"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <h5>Last Name:</h5>
+              </td>
+              <td>
+                <input
+                  type="text"
+                  id="last_name"
+                  placeholder="company description"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <h5>Email :</h5>
+              </td>
+              <td>
+                <input
+                  type="text"
+                  id="last_name"
+                  placeholder="company description"
+                  value={Email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <h5>Phone No. :</h5>
+              </td>
+              <td>
+                <input
+                  type="number"
+                  id="last_name"
+                  placeholder="company description"
+                  value={Phnum}
+                  onChange={(e) => setPhnum(e.target.value)}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <h5>Hire Date :</h5>
+              </td>
+              <td>
+                <input
+                  type="date"
+                  id="Dob"
+                  placeholder="Enter Your Date of birth"
+                  value={hireDate}
+                  onChange={(e) => setHireDate(e.target.value)}
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <button id="SubBtn" onClick={handleSubmit}>
+          Submit
+        </button>
+      </div> */}
+
+
 
       <div className="EmpDataTbl col-lg-10">
         <table className="table table-success table-striped">

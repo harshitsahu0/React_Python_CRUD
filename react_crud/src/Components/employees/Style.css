@@ -68,12 +68,10 @@ body{
 .inptfld{
     margin-left: 20px;
     margin-bottom: 10px;
-    /* float: right; */
 }
 
 #subBtn{
-    /* float: right; */
-    margin: auto;
+    display: inline;
     width: 100px;
     margin-top: 10px;
     border: none;
@@ -104,4 +102,13 @@ body{
     margin: auto;
 }
 
+#BckBtn{
+    display: inline;
+    width: 100px;
+    margin-top: 10px;
+    border: none;
+    background-color: rgba(20, 75, 158, 0.711);
+    color: white;
+    border-radius: 5px;
+}
 

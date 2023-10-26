@@ -13,7 +13,6 @@ const DataTable = (props) => {
     const [srchState, setSrchState] = useState(false);
     const itemPerpage = 10;
     const itemPerpageSrch = 8;
-
     const totalItemPerPages = props.data.length;
     const totalPages = Math.ceil(totalItemPerPages / itemPerpage)
 
@@ -48,12 +47,25 @@ const DataTable = (props) => {
         }).then((willDelete) => {
             if (willDelete) {
                 swal("successfull!", "Your details deleted!", "success");
+                swal({
+                    title: "Deleted",
+                    text: "Your details deleted!",
+                    icon: "success",
+                    timer: 2000,
+                    buttons: false,
+                  });
                 axios.delete(`http://127.0.0.1:8000/api/companies/${id}/`).then((res) => {
                     console.log(res);
                     props.getData();
                 })
             } else {
-                swal("Your Data is safe!");
+                swal({
+                title: "Cancelled",
+                text: "Your Data is Safe!",
+                icon: "success",
+                timer: 2000,
+                buttons: false,
+              });
             }
         });
     }
@@ -106,8 +118,7 @@ const DataTable = (props) => {
                                             <th scope="col">Action</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-
+                                    <tbody> 
                                         {searchRst.slice((current - 1) * itemPerpageSrch, current * itemPerpageSrch).map((item, i) => {
                                             const itemIndex = (current - 1) * itemPerpageSrch + i + 1;
                                             return (
@@ -203,7 +214,7 @@ const DataTable = (props) => {
                                 )}
                             </div>
                         </>
-                        : ""
+                        : <h3>There is no comapnies yet.</h3>
             }
         </div >
     )

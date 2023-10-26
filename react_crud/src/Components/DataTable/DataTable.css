@@ -73,6 +73,7 @@
     border-radius: 5px;
     border: none;
 }
+
 #srchInpt:focus{
     outline: none;
 }
@@ -82,7 +83,6 @@
 }
 
 #lnk{
-    /* text-decoration: none; */
     color: black;
     font-size: 16px;
     font-weight: 600;

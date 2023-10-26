@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { Space } from "antd";
 import swal from "sweetalert";
@@ -17,51 +17,51 @@ function Employee() {
   const [update, setUpdate] = useState(false);
   const [empId, setEmpId] = useState();
   const [isValid, setIsValid] = useState(false);
-
-
+  const [current, setCurrent] = useState(1);
+  const navigate = useNavigate();
 
   const validation = () => {
     const emailRegex = /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/;
-    var pattern = new RegExp(/^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/i);
+    var pattern = new RegExp(
+      /^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/i
+    );
     if (firstName.length === 0) {
       alert("please enter your First name");
       setIsValid(false);
-      return false
+      return false;
     }
     if (lastName.length === 0) {
       alert("please enter your Last name");
       setIsValid(false);
-      return false
+      return false;
     }
     if (!emailRegex.test(Email)) {
       alert("Please enter a valid email");
       setIsValid(false);
-      return false
+      return false;
     }
     if (Email.length === 0) {
       alert("Please enter a email");
       setIsValid(false);
-      return false
+      return false;
     }
     if (!pattern.test(Phnum)) {
       alert("please enter valid number");
       setIsValid(false);
-      return false
+      return false;
     }
     if (Phnum.length !== 10 || Phnum.length === 0) {
       alert("number should be of 10 digits");
       setIsValid(false);
-      return false
+      return false;
     }
-    if(hireDate.length==0){
+    if (hireDate.length == 0) {
       alert("please enter your date of birth");
       setIsValid(false);
-      return false
+      return false;
     }
-    // setIsValid(true);
     return true;
-  }
-
+  };
 
   const handleUpdate = () => {
     const formData = new FormData();
@@ -75,9 +75,15 @@ function Employee() {
       .put(`http://127.0.0.1:8000/api/employees/${empId}/`, formData)
       .then((res) => {
         getEmployeesData();
-        swal("successfull!", "Your details updated!", "success");
+        swal({
+          title: "Updated",
+          text: "Your details updated!",
+          icon: "success",
+          timer: 2000,
+          buttons: false,
+        });
       });
-      setUpdate(false);
+    setUpdate(false);
     document.getElementById("subBtn").innerHTML = "Submit";
     document.getElementById("Rgstr").innerHTML = "Register";
   };
@@ -85,7 +91,7 @@ function Employee() {
   const handleSubmit = () => {
     const valid = validation();
     if (update) {
-      if(valid){
+      if (valid) {
         handleUpdate();
         setFirstName("");
         setLastName("");
@@ -94,7 +100,7 @@ function Employee() {
         setHireDate("");
       }
     } else {
-      if(valid){
+      if (valid) {
         const formData = new FormData();
         formData.append("first_name", firstName);
         formData.append("last_name", lastName);
@@ -107,7 +113,13 @@ function Employee() {
           .then((res) => {
             console.log(res);
             getEmployeesData();
-            swal("successfull!", "Your details Submited!", "success");
+            swal({
+              title: "successfull",
+              text: "Your details Submited!",
+              icon: "success",
+              timer: 2000,
+              buttons: false,
+            });
           });
         setFirstName("");
         setLastName("");
@@ -155,7 +167,13 @@ function Employee() {
       dangerMode: true,
     }).then((willDelete) => {
       if (willDelete) {
-        swal("successfull!", "Your details deleted!", "success");
+        swal({
+          title: "successfull",
+          text: "Your details deleted!",
+          icon: "success",
+          timer: 2000,
+          buttons: false,
+        });
         axios
           .delete(`http://127.0.0.1:8000/api/employees/${id}/`)
           .then((res) => {
@@ -163,16 +181,36 @@ function Employee() {
             getEmployeesData();
           });
       } else {
-        swal("Your Data is safe!");
+        swal({
+          title: "Cancelled",
+          text: "Your Data is Safe!",
+          icon: "success",
+          timer: 2000,
+          buttons: false,
+        });
       }
     });
   };
 
+  const handleBack = () => {
+    navigate("/");
+  };
+
+  const itemPerpage = 6;
+  const totalItemPerPages = emplyData.length;
+  const totalPages = Math.ceil(totalItemPerPages / itemPerpage);
+
+  const getPageNumbers = () => {
+    const totalNumPages = []; 
+    for(let i=1;i<=totalPages;i++){
+      totalNumPages.push(i);
+    }
+    return totalNumPages;
+  };
+
   return (
     <div className="MainEmply ">
-      {/* <marquee behavior="alternate" direction="Right"> */}
-        <h1 className="cmpName">WELCOME TO {cmpName.toUpperCase()}</h1>
-      {/* </marquee> */}
+      <h1 className="cmpName">WELCOME TO {cmpName.toUpperCase()}</h1>
       <div className="col-lg-6 mainRegForm">
         <div className=" row container-fluid rowDiv">
           <h1 id="Rgstr">Register</h1>
@@ -206,7 +244,7 @@ function Employee() {
               className="inptfld"
               value={hireDate}
               onChange={(e) => setHireDate(e.target.value)}
-              style={{marginLeft:"-20px"}}
+              style={{ marginLeft: "-20px" }}
             />
           </div>
           <div className="col-lg-6 rightDiv">
@@ -231,144 +269,97 @@ function Employee() {
               onChange={(e) => setPhnum(e.target.value)}
             />
           </div>
-          <button id="subBtn" onClick={handleSubmit}>
-            submit
-          </button>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <button onClick={handleBack} id="BckBtn">
+              GO Back
+            </button>
+            <button id="subBtn" onClick={handleSubmit}>
+              {" "}
+              submit
+            </button>
+          </div>
         </div>
       </div>
-
-{/* <div className="RegFrom col-lg-4">
-        <table className="EmpTbl">
-          <tbody>
-            <tr>
-              <th colSpan={2} id="th">
-                Register
-              </th>
-            </tr>
-            <tr>
-              <td>
-                <h5> First Name:</h5>
-              </td>
-              <td>
-                <input
-                  type="text"
-                  id="first_name"
-                  placeholder="Enter company_Name"
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                />
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <h5>Last Name:</h5>
-              </td>
-              <td>
-                <input
-                  type="text"
-                  id="last_name"
-                  placeholder="company description"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                />
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <h5>Email :</h5>
-              </td>
-              <td>
-                <input
-                  type="text"
-                  id="last_name"
-                  placeholder="company description"
-                  value={Email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <h5>Phone No. :</h5>
-              </td>
-              <td>
-                <input
-                  type="number"
-                  id="last_name"
-                  placeholder="company description"
-                  value={Phnum}
-                  onChange={(e) => setPhnum(e.target.value)}
-                />
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <h5>Hire Date :</h5>
-              </td>
-              <td>
-                <input
-                  type="date"
-                  id="Dob"
-                  placeholder="Enter Your Date of birth"
-                  value={hireDate}
-                  onChange={(e) => setHireDate(e.target.value)}
-                />
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <button id="SubBtn" onClick={handleSubmit}>
-          Submit
-        </button>
-      </div> */}
-
-
-
       <div className="EmpDataTbl col-lg-10">
-        <table className="table table-success table-striped">
-          <thead>
-            <tr>
-              <th scope="col">S.N0.</th>
-              <th scope="col">Fisrt Name</th>
-              <th scope="col">Last Name</th>
-              <th scope="col">Email</th>
-              <th scope="col">Phone</th>
-              <th scope="col">Hire Date</th>
-              <th scope="col">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {emplyData.map((item, i) => {
-              return (
-                <tr key={item.id}>
-                  <th scope="row">{i + 1}</th>
-                  <td> {item.first_name}</td>
-                  <td>{item.last_name}</td>
-                  <td>{item.email}</td>
-                  <td>{item.phone}</td>
-                  <td>{item.hire_date}</td>
-                  <td>
-                    <Space wrap>
-                      <button
-                        id="updateBtn"
-                        onClick={() => handleEdit(item.id)}
-                      >
-                        <EditOutlined />
-                      </button>
-                      <button
-                        type="primary"
-                        id="deleteBtn"
-                        onClick={() => handleDeleteEmp(item.id)}
-                      >
-                        <DeleteOutlined />{" "}
-                      </button>
-                    </Space>
-                  </td>
+        {emplyData.length > 0 ? (
+          <>
+            <table className="table table-success table-striped">
+              <thead>
+                <tr>
+                  <th scope="col">S.N0.</th>
+                  <th scope="col">Fisrt Name</th>
+                  <th scope="col">Last Name</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Phone</th>
+                  <th scope="col">Hire Date</th>
+                  <th scope="col">Action</th>
                 </tr>
-              );
-            })}
-          </tbody>
-        </table>
+              </thead>
+              <tbody>
+                {emplyData.slice((current - 1) * itemPerpage, current * itemPerpage).map((item, i) => {
+                  return (
+                    <tr key={item.id}>
+                      <th scope="row">{i + 1}</th>
+                      <td> {item.first_name}</td>
+                      <td>{item.last_name}</td>
+                      <td>{item.email}</td>
+                      <td>{item.phone}</td>
+                      <td>{item.hire_date}</td>
+                      <td>
+                        <Space wrap>
+                          <button
+                            id="updateBtn"
+                            onClick={() => handleEdit(item.id)}
+                          >
+                            <EditOutlined />
+                          </button>
+                          <button
+                            type="primary"
+                            id="deleteBtn"
+                            onClick={() => handleDeleteEmp(item.id)}
+                          >
+                            <DeleteOutlined />{" "}
+                          </button>
+                        </Space>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+            <div className="pagination">
+              {totalPages > 1 && (
+                <div className="mainPage">
+                  <button
+                    onClick={() => setCurrent(current - 1)}
+                    className="next-prev-btn"
+                    disabled={current === 1}
+                  >
+                    Previous
+                  </button>
+                  {getPageNumbers().map((pageNumber) => (
+                    <button
+                      key={pageNumber}
+                      className={pageNumber === current ? "active" : ""}
+                      onClick={() => setCurrent(pageNumber)}
+                    >
+                      {pageNumber}
+                    </button>
+                  ))}
+                  <button
+                    onClick={() => setCurrent(current + 1)}
+                    className="next-prev-btn"
+                    disabled={current === totalPages}
+                  >
+                    Next
+                  </button>
+                </div>
+              )}
+            </div>
+          </>
+        ) : (
+          <h3>There is no employees in this company</h3>
+        )}
       </div>
     </div>
   );

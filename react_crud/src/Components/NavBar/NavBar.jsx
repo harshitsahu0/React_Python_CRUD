@@ -4,9 +4,7 @@ import "./NavBar.css";
 import axios from 'axios';
 import swal from 'sweetalert';
 
-
 const NavBar = () => {
-
     const [comName, setComName] = useState("");
     const [ComDescription, setComDescription] = useState("");
     const [foundDate, setFoundDate] = useState("");
@@ -94,9 +92,7 @@ const NavBar = () => {
                     </div>
                 </div>
             </nav>
-
             <DataTable data={data} getData={getData} handleUpdateState={handleUpdateState} />
-
             <div className="modal fade " id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div className="modal-dialog">
                     <div className="modal-content">

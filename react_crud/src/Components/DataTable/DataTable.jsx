@@ -110,11 +110,11 @@ const DataTable = (props) => {
                                 : <table className="table table-success table-striped">
                                     <thead>
                                         <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">Company Name</th>
-                                            <th scope="col">description</th>
-                                            <th scope="col">founded_date</th>
-                                            <th scope="col">headquarters_location</th>
+                                            <th scope="col">S.No.</th>
+                                            <th scope="col">Companies Names</th>
+                                            <th scope="col">Description</th>
+                                            <th scope="col">Founded Date</th>
+                                            <th scope="col">Headquarters Location</th>
                                             <th scope="col">Action</th>
                                         </tr>
                                     </thead>
@@ -165,11 +165,11 @@ const DataTable = (props) => {
                             <table className="table table-success table-striped">
                                 <thead>
                                     <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">Company Name</th>
-                                        <th scope="col">description</th>
-                                        <th scope="col">founded_date</th>
-                                        <th scope="col">headquarters_location</th>
+                                        <th scope="col">S.No.</th>
+                                        <th scope="col">Companies Names</th>
+                                        <th scope="col">Description</th>
+                                        <th scope="col">Founded Date</th>
+                                        <th scope="col">Headquarters Location</th>
                                         <th scope="col">Action</th>
                                     </tr>
                                 </thead>

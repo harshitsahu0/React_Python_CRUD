@@ -290,16 +290,17 @@ function Employee() {
                   <th scope="col">Fisrt Name</th>
                   <th scope="col">Last Name</th>
                   <th scope="col">Email</th>
-                  <th scope="col">Phone</th>
+                  <th scope="col">Phone No.</th>
                   <th scope="col">Hire Date</th>
                   <th scope="col">Action</th>
                 </tr>
               </thead>
               <tbody>
                 {emplyData.slice((current - 1) * itemPerpage, current * itemPerpage).map((item, i) => {
+                  const itemIndex = (current - 1) * itemPerpage + i + 1;
                   return (
                     <tr key={item.id}>
-                      <th scope="row">{i + 1}</th>
+                      <th scope="row">{itemIndex}</th>
                       <td> {item.first_name}</td>
                       <td>{item.last_name}</td>
                       <td>{item.email}</td>
@@ -358,7 +359,7 @@ function Employee() {
             </div>
           </>
         ) : (
-          <h3>There is no employees in this company</h3>
+          <h3>There are no employees in this company</h3>
         )}
       </div>
     </div>

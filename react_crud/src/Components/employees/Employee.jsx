@@ -99,6 +99,11 @@ function Employee() {
     setUpdate(false);
     document.getElementById("subBtn").innerHTML = "Submit";
     document.getElementById("Rgstr").innerHTML = "Register";
+    setFirstName("");
+    setLastName("");
+    setEmail("");
+    setPhnum("");
+    setHireDate("");
   };
 
   const handleSubmit = () => {
@@ -106,11 +111,6 @@ function Employee() {
     if (update) {
       if (valid) {
         handleUpdate();
-        setFirstName("");
-        setLastName("");
-        setEmail("");
-        setPhnum("");
-        setHireDate("");
       }
     } else {
       if (valid) {

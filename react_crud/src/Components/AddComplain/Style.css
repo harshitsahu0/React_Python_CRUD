@@ -10,3 +10,8 @@
 .empBackBtn{
     font-size: 50px;
 }
+
+.read-more-less--more,
+.read-more-less--less {
+  color: rgb(33, 80, 169);
+}

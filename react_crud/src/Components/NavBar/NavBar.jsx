@@ -13,7 +13,7 @@ const NavBar = () => {
   const [id, setId] = useState();
   const [data, setData] = useState([]);
   const [isValid, setIsValid] = useState(false);
-  const [vldAlert, setVldAlert] = useState({});
+  // const [vldAlert, setVldAlert] = useState({});
 
   const [cmpSelected, setCmpSelected] = useState("0");
   const [empSelected, setEmpSelected] = useState("");
@@ -38,12 +38,6 @@ const NavBar = () => {
         setEmployeeoptionsData(res.data);
       });
     setCmpSelected(cmpId);
-  }
-
-
-
-  const handleSubmit = () =>{
-    debugger
   }
 
   const postComplain = () =>{
@@ -73,8 +67,6 @@ const NavBar = () => {
     const newObj = {};
     if (comName.length === 0) {
       alert("please enter company name");
-      //   newObj.cmpName = "please enter company name";
-      //   setVldAlert(newObj);
       setIsValid(false);
       return false;
     }
@@ -187,13 +179,7 @@ const NavBar = () => {
     submitBtn.innerHTML = "Submit";
     setUpdate(false);
   };
-
-  const handleSearchState = (values, pages, con) => {
-    setSearchRst(values);
-    setTotalSrchRst(pages);
-    setSrchState(con);
-  };
-
+  
   return (
     <div>
       <nav
@@ -353,7 +339,7 @@ const NavBar = () => {
             <br/>
             <h3 style={{color:""}}>AddComplain</h3>
             <div className="modal-body">
-              <form onSubmit={handleSubmit} className="containerr">
+              <form className="containerr">
                 <div className="mb-3">
                   <label htmlFor="companySelect" className="form-label">
                     Company

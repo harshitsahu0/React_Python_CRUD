@@ -1,10 +1,7 @@
-import {
-  DeleteOutlined,
-  LeftCircleFilled,
-} from "@ant-design/icons";
+import { DeleteOutlined, LeftCircleFilled } from "@ant-design/icons";
 import { Space } from "antd";
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import axios from "axios";
 import "./Style.css";
 import swal from "sweetalert";
@@ -100,9 +97,11 @@ const AddComplain = () => {
                     <td>{empName}</td>
                     {/* <td>{item.discriptions}</td> */}
                     <ReactReadMoreReadLess
-                      charLimit={20}
-                      readMoreText={"Read more ▼"}
-                      readLessText={"Read less ▲"}
+                      charLimit={60}
+                      readMoreText={"Read more..."}
+                      readLessText={"Read less..."}
+                      readMoreClassName="read-more-less--more"
+                      readLessClassName="read-more-less--less"
                     >
                       {item.discriptions}
                     </ReactReadMoreReadLess>

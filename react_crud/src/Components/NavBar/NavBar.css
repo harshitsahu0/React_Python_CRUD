@@ -2,6 +2,9 @@ td {
     padding: 10px;
 }
 
+#navv{
+    background-color: cadetblue;
+}
 table {
     margin: auto;
     border-spacing: 10px;
@@ -46,4 +49,44 @@ table {
 #tr_th th {
     padding: 20px;
     color: white;
+}
+
+.addBtn{
+    background-color: #0c64a3e8;
+    border: none;
+    color: white;
+    padding: 8px;
+    border-radius: 5px;
+}
+
+.addCmpBtn{
+    margin-left: 8px;
+}
+
+.addBtn:hover{
+    background-color: #035ea9;
+}
+
+.addComplain{
+    background-color: #035ea9;
+}
+
+#welTxt{
+    color: #e4eaec;
+    font-size: 25px;
+}
+.form-control{
+    width: 350px;
+    margin: auto;
+    
+}
+.select{
+    width: 350px;
+    height: 35px;
+    display: block;
+    margin: auto;
+}
+
+.addCmpMdl{
+    width: 450px;
 }

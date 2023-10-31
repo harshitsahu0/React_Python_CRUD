@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { EditOutlined, DeleteOutlined, EditFilled, DeleteFilled } from "@ant-design/icons";
 import { Space } from "antd";
 import swal from "sweetalert";
 import axios from "axios";
@@ -20,47 +20,60 @@ function Employee() {
   const [current, setCurrent] = useState(1);
   const navigate = useNavigate();
 
+
+  const [errors, setErrors] = useState({});
+
   const validation = () => {
+    let isValid = true;
+    const newErrors = {};
     const emailRegex = /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/;
     var pattern = new RegExp(
       /^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/i
     );
-    if (firstName.length === 0) {
-      alert("please enter your First name");
-      setIsValid(false);
-      return false;
+    if(firstName.length===0&&lastName.length === 0&&Email.length === 0&&Phnum.length === 0&&hireDate.length == 0){
+      newErrors.default = "All the field * required";
+      isValid =false;
+    }else{
+
+      if (firstName.length === 0) {
+        newErrors.firstName = "first name required*";
+        setIsValid(false);
+        isValid= false;
+      }
+      if (lastName.length === 0) {
+        newErrors.lastName = "last name required*";
+        setIsValid(false);
+        isValid= false;
+      }
+      if (!emailRegex.test(Email)) {
+        newErrors.email = "Invalid email address*";
+        setIsValid(false);
+        isValid= false;
+      }
+      if (Email.length === 0) {
+        newErrors.email = "email required*";
+        setIsValid(false);
+        isValid= false;
+      }
+      if (!pattern.test(Phnum)) {
+        newErrors.Phnum = "Invalid number*";
+        setIsValid(false);
+        isValid= false;
+      }
+      if (Phnum.length !== 10 || Phnum.length === 0) {
+        newErrors.Phnum = "only 10 digits required*";
+        setIsValid(false);
+        isValid= false;
+      }
+      if (hireDate.length == 0) {
+        newErrors.hireDate = "hire date required*";
+        setIsValid(false);
+        isValid= false;
+      }
+      console.log("newErrors :",newErrors);
     }
-    if (lastName.length === 0) {
-      alert("please enter your Last name");
-      setIsValid(false);
-      return false;
-    }
-    if (!emailRegex.test(Email)) {
-      alert("Please enter a valid email");
-      setIsValid(false);
-      return false;
-    }
-    if (Email.length === 0) {
-      alert("Please enter a email");
-      setIsValid(false);
-      return false;
-    }
-    if (!pattern.test(Phnum)) {
-      alert("please enter valid number");
-      setIsValid(false);
-      return false;
-    }
-    if (Phnum.length !== 10 || Phnum.length === 0) {
-      alert("number should be of 10 digits");
-      setIsValid(false);
-      return false;
-    }
-    if (hireDate.length == 0) {
-      alert("please enter your date of birth");
-      setIsValid(false);
-      return false;
-    }
-    return true;
+    setErrors(newErrors);
+    return isValid;
   };
 
   const handleUpdate = () => {
@@ -208,6 +221,14 @@ function Employee() {
     return totalNumPages;
   };
 
+  const pagesToShow = 2;
+  const pageNumbers = getPageNumbers();
+
+  const visiblePageNumbers = pageNumbers.filter(
+    (pageNumber) =>
+      pageNumber >= current - pagesToShow && pageNumber <= current + pagesToShow
+  );
+
   return (
     <div className="MainEmply ">
       <h1 className="cmpName">WELCOME TO {cmpName.toUpperCase()}</h1>
@@ -216,7 +237,7 @@ function Employee() {
           <h1 id="Rgstr">Register</h1>
           <div className="col-lg-6 leftDiv">
             <label htmlFor="first_name" className="label">
-              First Name :{" "}
+              First Name<span className="text-danger">*</span> :{" "}
             </label>
             <input
               type="text"
@@ -225,31 +246,34 @@ function Employee() {
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
             />
+            <p className="altP" style={{marginLeft:"83px"}}>{errors.firstName}</p>
             <label htmlFor="last_name" className="label">
-              Email :{" "}
+              Email<span className="text-danger">*</span> :{" "}
             </label>
             <input
               type="email"
               placeholder="Enter your Email..."
-              style={{ marginLeft: "60px" }}
+              style={{ marginLeft: "50px" }}
               className="inptfld"
               value={Email}
               onChange={(e) => setEmail(e.target.value)}
             />
+            <p className="altP" style={{marginLeft:"33px"}}>{errors.email}</p>
             <label htmlFor="" className="label" style={{ float: "left" }}>
-              Hire Date :
+              Hire Date<span className="text-danger">*</span> :
             </label>
             <input
               type="date"
               className="inptfld"
               value={hireDate}
               onChange={(e) => setHireDate(e.target.value)}
-              style={{ marginLeft: "-20px" }}
+              style={{ marginLeft: "10px",width:"185px" }}
             />
+            <p className="altP" style={{marginLeft:"55px"}}>{errors.hireDate}</p>
           </div>
           <div className="col-lg-6 rightDiv">
             <label htmlFor="" className="label">
-              Last Name :{" "}
+              Last Name<span className="text-danger">*</span> :{" "}
             </label>
             <input
               type="text"
@@ -258,8 +282,9 @@ function Employee() {
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
             />
+            <p className="altP" style={{marginLeft:"80px"}}>{errors.lastName}</p>
             <label htmlFor="" className="label">
-              Phone No. :{" "}
+              Phone No.<span className="text-danger">*</span> :{" "}
             </label>
             <input
               type="text"
@@ -268,10 +293,12 @@ function Employee() {
               value={Phnum}
               onChange={(e) => setPhnum(e.target.value)}
             />
+            <p className="altP" style={{marginLeft:"88px"}}>{errors.Phnum}</p>
+            <p className="altP" >{errors.default}</p>
           </div>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <button onClick={handleBack} id="BckBtn">
-              GO Back
+              Go Back
             </button>
             <button id="subBtn" onClick={handleSubmit}>
               {" "}
@@ -283,9 +310,9 @@ function Employee() {
       <div className="EmpDataTbl col-lg-10">
         {emplyData.length > 0 ? (
           <>
-            <table className="table table-success table-striped">
+            <table className="table">
               <thead>
-                <tr>
+                <tr className="tHead">
                   <th scope="col">S.N0.</th>
                   <th scope="col">Fisrt Name</th>
                   <th scope="col">Last Name</th>
@@ -299,28 +326,22 @@ function Employee() {
                 {emplyData.slice((current - 1) * itemPerpage, current * itemPerpage).map((item, i) => {
                   const itemIndex = (current - 1) * itemPerpage + i + 1;
                   return (
-                    <tr key={item.id}>
+                    <tr key={item.id} className="tbRw">
                       <th scope="row">{itemIndex}</th>
-                      <td> {item.first_name}</td>
+                      <td>
+                        {" "}
+                        <Link id="lnk" to={`/empComplain/${item.id}/${item.first_name}`}>
+                        {item.first_name}
+                        </Link>
+                      </td>
                       <td>{item.last_name}</td>
                       <td>{item.email}</td>
                       <td>{item.phone}</td>
                       <td>{item.hire_date}</td>
                       <td>
                         <Space wrap>
-                          <button
-                            id="updateBtn"
-                            onClick={() => handleEdit(item.id)}
-                          >
-                            <EditOutlined />
-                          </button>
-                          <button
-                            type="primary"
-                            id="deleteBtn"
-                            onClick={() => handleDeleteEmp(item.id)}
-                          >
-                            <DeleteOutlined />{" "}
-                          </button>
+                            <EditFilled onClick={() => handleEdit(item.id)} id="updateBtn"/>
+                            <DeleteFilled onClick={() => handleDeleteEmp(item.id)} id="deleteBtn"/>
                         </Space>
                       </td>
                     </tr>
@@ -328,7 +349,7 @@ function Employee() {
                 })}
               </tbody>
             </table>
-            <div className="pagination">
+            {/* <div className="pagination">
               {totalPages > 1 && (
                 <div className="mainPage">
                   <button
@@ -356,7 +377,50 @@ function Employee() {
                   </button>
                 </div>
               )}
-            </div>
+            </div> */}
+            <div className="pagination">
+            {totalPages > 1 && (
+              <div className="mainPage">
+                <button
+                  onClick={() => setCurrent(current - 1)}
+                  className="next-prev-btn"
+                  disabled={current === 1}
+                >
+                  Previous
+                </button>
+                {current > pagesToShow + 1 && (
+                  <>
+                    <button onClick={() => setCurrent(1)}>1</button>
+                    {current > pagesToShow + 2 && <span>...</span>}
+                  </>
+                )}
+                {visiblePageNumbers.map((pageNumber) => (
+                  <button
+                    key={pageNumber}
+                    className={pageNumber === current ? "active" : ""}
+                    onClick={() => setCurrent(pageNumber)}
+                  >
+                    {pageNumber}
+                  </button>
+                ))}
+                {current < totalPages - pagesToShow && (
+                  <>
+                    {current < totalPages - pagesToShow - 1 && <span>...</span>}
+                    <button onClick={() => setCurrent(totalPages)}>
+                      {totalPages}
+                    </button>
+                  </>
+                )}
+                <button
+                  onClick={() => setCurrent(current + 1)}
+                  className="next-prev-btn"
+                  disabled={current === totalPages}
+                >
+                  Next
+                </button>
+              </div>
+            )}
+          </div>
           </>
         ) : (
           <h3>There are no employees in this company</h3>

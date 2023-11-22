@@ -1,8 +1,15 @@
 import React, { useEffect, useState } from "react";
 import DataTable from "../DataTable/DataTable";
 import "./NavBar.css";
-import axios from "axios";
-import swal from "sweetalert";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getApiData,
+  postApiFun,
+  updateCompanyApi,
+} from "../../Redux/Actions/Company_Action";
+import { getEmpData } from "../../Redux/Actions/Employee_Action";
+import { postCmplnApiData } from "../../Redux/Actions/Complain_Action";
+import AddCmplnBtn from "../AddComplainBtn/AddCmplnBtn";
 
 const NavBar = () => {
   const [comName, setComName] = useState("");
@@ -13,9 +20,8 @@ const NavBar = () => {
   const [id, setId] = useState();
   const [data, setData] = useState([]);
   const [isValid, setIsValid] = useState(false);
-  // const [vldAlert, setVldAlert] = useState({});
 
-  const [cmpSelected, setCmpSelected] = useState("0");
+  const [cmpSelected, setCmpSelected] = useState("");
   const [empSelected, setEmpSelected] = useState("");
   const [complainTitle, setComplainTitle] = useState("");
   const [complainDescription, setcomplainDescription] = useState("");
@@ -26,38 +32,44 @@ const NavBar = () => {
   const [searchRst, setSearchRst] = useState([]);
   const [srchState, setSrchState] = useState(false);
   const [totalSrchRst, setTotalSrchRst] = useState();
+  const dispatch = useDispatch();
+  const ApiData = useSelector((state) => state.getApiReducer.dataList);
+  const empOptdata = useSelector((state) => state.getEmpApiReducer.dataList);
+  const postRes = useSelector((state) => state.getEmpCmplnApiReducer.postData);
 
-  const handleCpmSlt = (e) =>{
-    setCmpSelected(e.target.value);
-    const cmpId = JSON.parse(e.target.value);
-    console.log(cmpId);
-    axios
-      .get(`http://127.0.0.1:8000/api/companiesemp/${cmpId}/`)
-      .then((res) => {
-        console.log(res.data);
-        setEmployeeoptionsData(res.data);
-      });
-    setCmpSelected(cmpId);
-  }
+  // const handleCpmSlt = (e) => {
+  //   setCmpSelected(e.target.value);
+  //   const cmpId = JSON.parse(e.target.value);
+  //   console.log(cmpId);
+  //   // axios
+  //   //   .get(`http://127.0.0.1:8000/api/companiesemp/${cmpId}/`)
+  //   //   .then((res) => {
+  //   //     console.log(res.data);
+  //   //     setEmployeeoptionsData(res.data);
+  //   //   });
+  //   dispatch(getEmpData(cmpId));
+  //   setCmpSelected(cmpId);
+  // };
 
-  const postComplain = () =>{
-    const formData = new FormData();
-    formData.append("title",complainTitle);
-    formData.append("discriptions",complainDescription);
-    formData.append("email",complainemail);
-    formData.append("company",cmpSelected);
-    formData.append("employee",empSelected);
-    axios.post("http://127.0.0.1:8000/api/complains/",formData).then((res)=>{
-      swal({
-        title: "successfull",
-        text: "Your Complain added!",
-        icon: "success",
-        timer: 2000,
-        buttons: false,
-      });
-      console.log(res.data);
-    })
-  }
+  // const postComplain = () => {
+  //   const formData = new FormData();
+  //   formData.append("title", complainTitle);
+  //   formData.append("discriptions", complainDescription);
+  //   formData.append("email", complainemail);
+  //   formData.append("company", cmpSelected);
+  //   formData.append("employee", empSelected);
+  //   // axios.post("http://127.0.0.1:8000/api/complains/",formData).then((res)=>{
+  //   //   swal({
+  //   //     title: "successfull",
+  //   //     text: "Your Complain added!",
+  //   //     icon: "success",
+  //   //     timer: 2000,
+  //   //     buttons: false,
+  //   //   });
+  //   //   console.log(res.data);
+  //   // })
+  //   dispatch(postCmplnApiData(formData));
+  // };
 
   const validation = () => {
     const emailRegex = /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/;
@@ -88,11 +100,22 @@ const NavBar = () => {
     return true;
   };
 
-  const getData = () => {
-    axios.get("http://127.0.0.1:8000/api/companies/").then((res) => {
-      setData(res.data);
-    });
-  };
+  // const getData = () => {
+  //   axios.get("http://127.0.0.1:8000/api/companies/").then((res) => {
+  //     const sortData = res.data.sort((a,b)=>{
+  //       const nameA = a.name.toUpperCase();
+  //       const nameB = b.name.toUpperCase();
+  //       if (nameA < nameB) {
+  //         return -1;
+  //       }
+  //       if (nameA > nameB) {
+  //         return 1;
+  //       }
+  //       return 0;
+  //     })
+  //     setData(sortData);
+  //   });
+  // };
 
   const handleUpdate = () => {
     const formData = new FormData();
@@ -100,19 +123,20 @@ const NavBar = () => {
     formData.append("description", ComDescription);
     formData.append("founded_date", foundDate);
     formData.append("headquarters_location", headLocation);
-    axios
-      .put(`http://127.0.0.1:8000/api/companies/${id}/`, formData)
-      .then((res) => {
-        console.log(res);
-        swal({
-          title: "successfull",
-          text: "Your details updated!",
-          icon: "success",
-          timer: 2000,
-          buttons: false,
-        });
-        getData();
-      });
+    // axios
+    //   .put(`http://127.0.0.1:8000/api/companies/${id}/`, formData)
+    //   .then((res) => {
+    //     console.log(res);
+    //     swal({
+    //       title: "successfull",
+    //       text: "Your details updated!",
+    //       icon: "success",
+    //       timer: 2000,
+    //       buttons: false,
+    //     });
+    //     getData();
+    //   });
+    dispatch(updateCompanyApi(id, formData));
     console.log("id :", id);
     console.log("hit");
     const submitBtn = document.getElementById("createBtn");
@@ -130,9 +154,40 @@ const NavBar = () => {
     setId(id);
   };
 
+  // useEffect(() => {
+  //   if (postRes) {
+  //     setComplainemail("");
+  //     setcomplainDescription("");
+  //     setComplainTitle("");
+  //     setEmpSelected("");
+  //     setCmpSelected("");
+  //   }
+  // }, [postRes]);
+
   useEffect(() => {
-    getData();
+    dispatch(getApiData());
   }, []);
+
+  useEffect(() => {
+    if (ApiData !== undefined) {
+      const sortData = ApiData.sort((a, b) => {
+        const nameA = a.name.toUpperCase();
+        const nameB = b.name.toUpperCase();
+        if (nameA < nameB) {
+          return -1;
+        }
+        if (nameA > nameB) {
+          return 1;
+        }
+        return 0;
+      });
+      setData(sortData);
+    }
+
+    if (empOptdata !== undefined) {
+      setEmployeeoptionsData(empOptdata);
+    }
+  }, [ApiData, empOptdata]);
 
   const handleFromSubmit = () => {
     if (update) {
@@ -150,18 +205,19 @@ const NavBar = () => {
         formData.append("description", ComDescription);
         formData.append("founded_date", foundDate);
         formData.append("headquarters_location", headLocation);
-        axios
-          .post("http://127.0.0.1:8000/api/companies/", formData)
-          .then((res) => {
-            swal({
-              title: "successfull",
-              text: "Your details Submited!",
-              icon: "success",
-              timer: 2000,
-              buttons: false,
-            });
-            getData();
-          });
+        // axios
+        //   .post("http://127.0.0.1:8000/api/companies/", formData)
+        //   .then((res) => {
+        //     swal({
+        //       title: "successfull",
+        //       text: "Your details Submited!",
+        //       icon: "success",
+        //       timer: 2000,
+        //       buttons: false,
+        //     });
+        //     getData();
+        //   });
+        dispatch(postApiFun(formData));
         setComName("");
         setComDescription("");
         setFoundDate("");
@@ -179,7 +235,7 @@ const NavBar = () => {
     submitBtn.innerHTML = "Submit";
     setUpdate(false);
   };
-  
+
   return (
     <div>
       <nav
@@ -199,21 +255,21 @@ const NavBar = () => {
               >
                 Add Company
               </button>
-              <button
+              {/* <button
                 type="button"
                 className="addBtn addCmpBtn"
                 data-bs-toggle="modal"
                 data-bs-target="#exampleModal2"
               >
                 Add Complain
-              </button>
+              </button> */}
+              <AddCmplnBtn data={data}/>
             </form>
           </div>
         </div>
       </nav>
       <DataTable
         data={data}
-        getData={getData}
         searchRst={searchRst}
         srchState={srchState}
         totalSrchRst={totalSrchRst}
@@ -245,7 +301,6 @@ const NavBar = () => {
                         value={comName}
                         onChange={(e) => setComName(e.target.value)}
                       />
-                      {/* {vldAlert.cmpName ? <p style={{color:"red"}}>{vldAlert.cmpName}</p>:""} */}
                     </td>
                   </tr>
                   <tr>
@@ -327,7 +382,7 @@ const NavBar = () => {
           </div>
         </div>
       </div>
-      <div
+      {/* <div
         className="modal fade"
         id="exampleModal2"
         tabIndex="-1"
@@ -336,8 +391,8 @@ const NavBar = () => {
       >
         <div className="modal-dialog addCmpMdl">
           <div className="modal-content">
-            <br/>
-            <h3 style={{color:""}}>AddComplain</h3>
+            <br />
+            <h3 style={{ color: "" }}>AddComplain</h3>
             <div className="modal-body">
               <form className="containerr">
                 <div className="mb-3">
@@ -350,9 +405,7 @@ const NavBar = () => {
                     onChange={handleCpmSlt}
                     id="companySelect"
                   >
-                    <option value="0" disabled>
-                      Select company
-                    </option>
+                    <option value="">Select company</option>
                     {data.map((option) => (
                       <option key={option.id} value={option.id}>
                         {option.name}
@@ -423,20 +476,20 @@ const NavBar = () => {
               </form>
             </div>
             <div className="modal-footer">
-             <center>
-             <button
-                type="button"
-                onClick={postComplain}
-                className="btn btn-secondary addComplain"
-                data-bs-dismiss="modal"
-              >
-                AddComplain
-              </button>
+              <center>
+                <button
+                  type="button"
+                  onClick={postComplain}
+                  className="btn btn-secondary addComplain"
+                  data-bs-dismiss="modal"
+                >
+                  AddComplain
+                </button>
               </center>
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

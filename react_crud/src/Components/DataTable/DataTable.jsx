@@ -6,12 +6,14 @@ import "./DataTable.css";
 import {
   EditOutlined,
   DeleteOutlined,
-  Loading3QuartersOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import { deleteCompanyApi } from "../../Redux/Actions/Company_Action";
 
 const DataTable = (props) => {
+  const dispatch = useDispatch();
   const [search, setSearch] = useState("");
   const [current, setCurrent] = useState(1);
   const [searchRst, setSearchRst] = useState([]);
@@ -70,12 +72,13 @@ const DataTable = (props) => {
           timer: 2000,
           buttons: false,
         });
-        axios
-          .delete(`http://127.0.0.1:8000/api/companies/${id}/`)
-          .then((res) => {
-            console.log(res);
-            props.getData();
-          });
+        // axios
+        //   .delete(`http://127.0.0.1:8000/api/companies/${id}/`)
+        //   .then((res) => {
+        //     console.log(res);
+        //     props.getData();
+        //   });
+        dispatch(deleteCompanyApi(id));
       } else {
         swal({
           title: "Cancelled",
@@ -406,7 +409,7 @@ const DataTable = (props) => {
                 onChange={(e) => setSelectedRows(parseInt(e.target.value))}
                 style={{ color: "black", borderRadius: "5px" }}
               >
-                <option value="10">Select Number of Rows</option>
+                <option value={10}>Select Number of Rows</option>
                 {number_of_rows.map((option) => (
                   <option key={option} value={option}>
                     {option}

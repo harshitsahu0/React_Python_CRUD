@@ -1,10 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { EditOutlined, DeleteOutlined, EditFilled, DeleteFilled } from "@ant-design/icons";
+import {
+  EditOutlined,
+  DeleteOutlined,
+  EditFilled,
+  DeleteFilled,
+} from "@ant-design/icons";
 import { Space } from "antd";
 import swal from "sweetalert";
 import axios from "axios";
 import "./Style.css";
+import { useSelector, useDispatch } from "react-redux";
+import { AddEmpData, deleteEmpData, getEmpData, updateEmpData } from "../../Redux/Actions/Employee_Action";
 
 function Employee() {
   const { id, cmpName } = useParams();
@@ -18,8 +25,12 @@ function Employee() {
   const [empId, setEmpId] = useState();
   const [isValid, setIsValid] = useState(false);
   const [current, setCurrent] = useState(1);
-  const navigate = useNavigate();
 
+  const dispatch = useDispatch();
+  const empApiData = useSelector((state) => state.getEmpApiReducer.dataList);
+  console.log("empApiData : ", empApiData);
+
+  const navigate = useNavigate();
 
   const [errors, setErrors] = useState({});
 
@@ -30,47 +41,52 @@ function Employee() {
     var pattern = new RegExp(
       /^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/i
     );
-    if(firstName.length===0&&lastName.length === 0&&Email.length === 0&&Phnum.length === 0&&hireDate.length == 0){
+    if (
+      firstName.length === 0 &&
+      lastName.length === 0 &&
+      Email.length === 0 &&
+      Phnum.length === 0 &&
+      hireDate.length == 0
+    ) {
       newErrors.default = "All the field * required";
-      isValid =false;
-    }else{
-
+      isValid = false;
+    } else {
       if (firstName.length === 0) {
         newErrors.firstName = "first name required*";
         setIsValid(false);
-        isValid= false;
+        isValid = false;
       }
       if (lastName.length === 0) {
         newErrors.lastName = "last name required*";
         setIsValid(false);
-        isValid= false;
+        isValid = false;
       }
       if (!emailRegex.test(Email)) {
         newErrors.email = "Invalid email address*";
         setIsValid(false);
-        isValid= false;
+        isValid = false;
       }
       if (Email.length === 0) {
         newErrors.email = "email required*";
         setIsValid(false);
-        isValid= false;
+        isValid = false;
       }
       if (!pattern.test(Phnum)) {
         newErrors.Phnum = "Invalid number*";
         setIsValid(false);
-        isValid= false;
+        isValid = false;
       }
       if (Phnum.length !== 10 || Phnum.length === 0) {
         newErrors.Phnum = "only 10 digits required*";
         setIsValid(false);
-        isValid= false;
+        isValid = false;
       }
       if (hireDate.length == 0) {
         newErrors.hireDate = "hire date required*";
         setIsValid(false);
-        isValid= false;
+        isValid = false;
       }
-      console.log("newErrors :",newErrors);
+      console.log("newErrors :", newErrors);
     }
     setErrors(newErrors);
     return isValid;
@@ -84,18 +100,19 @@ function Employee() {
     formData.append("phone", Phnum);
     formData.append("hire_date", hireDate);
     formData.append("company", JSON.parse(id));
-    axios
-      .put(`http://127.0.0.1:8000/api/employees/${empId}/`, formData)
-      .then((res) => {
-        getEmployeesData();
-        swal({
-          title: "Updated",
-          text: "Your details updated!",
-          icon: "success",
-          timer: 2000,
-          buttons: false,
-        });
-      });
+    // axios
+    //   .put(`http://127.0.0.1:8000/api/employees/${empId}/`, formData)
+    //   .then((res) => {
+    //     getEmployeesData();
+    //     swal({
+    //       title: "Updated",
+    //       text: "Your details updated!",
+    //       icon: "success",
+    //       timer: 2000,
+    //       buttons: false,
+    //     });
+    //   });
+    dispatch(updateEmpData(formData,empId,id))
     setUpdate(false);
     document.getElementById("subBtn").innerHTML = "Submit";
     document.getElementById("Rgstr").innerHTML = "Register";
@@ -121,19 +138,20 @@ function Employee() {
         formData.append("phone", Phnum);
         formData.append("hire_date", hireDate);
         formData.append("company", JSON.parse(id));
-        axios
-          .post("http://127.0.0.1:8000/api/employees/", formData)
-          .then((res) => {
-            console.log(res);
-            getEmployeesData();
-            swal({
-              title: "successfull",
-              text: "Your details Submited!",
-              icon: "success",
-              timer: 2000,
-              buttons: false,
-            });
-          });
+        // axios
+        //   .post("http://127.0.0.1:8000/api/employees/", formData)
+        //   .then((res) => {
+        //     console.log(res);
+        //     getEmployeesData();
+        //     swal({
+        //       title: "successfull",
+        //       text: "Your details Submited!",
+        //       icon: "success",
+        //       timer: 2000,
+        //       buttons: false,
+        //     });
+        //   });
+        dispatch(AddEmpData(formData,id));
         setFirstName("");
         setLastName("");
         setEmail("");
@@ -143,15 +161,15 @@ function Employee() {
     }
   };
 
-  const getEmployeesData = () => {
-    const cmpId = JSON.parse(id);
-    axios
-      .get(`http://127.0.0.1:8000/api/companiesemp/${cmpId}/`)
-      .then((res) => {
-        console.log(res.data);
-        setEmplyData(res.data);
-      });
-  };
+  // const getEmployeesData = () => {
+  //   const cmpId = JSON.parse(id);
+  //   axios
+  //     .get(`http://127.0.0.1:8000/api/companiesemp/${cmpId}/`)
+  //     .then((res) => {
+  //       console.log(res.data);
+  //       setEmplyData(res.data);
+  //     });
+  // };
 
   const handleEdit = (id) => {
     const updtData = emplyData.filter((item) => item.id == id);
@@ -168,10 +186,17 @@ function Employee() {
   };
 
   useEffect(() => {
-    getEmployeesData();
+    // getEmployeesData();
+    dispatch(getEmpData(JSON.parse(id)));
   }, []);
 
-  const handleDeleteEmp = (id) => {
+  useEffect(() => {
+    if (empApiData !== undefined) {
+      setEmplyData(empApiData);
+    }
+  }, [empApiData]);
+
+  const handleDeleteEmp = (empid) => {
     swal({
       title: "Are you sure? ",
       text: "Once deleted, you will not be able to recover this Data",
@@ -187,12 +212,13 @@ function Employee() {
           timer: 2000,
           buttons: false,
         });
-        axios
-          .delete(`http://127.0.0.1:8000/api/employees/${id}/`)
-          .then((res) => {
-            console.log(res);
-            getEmployeesData();
-          });
+        // axios
+        //   .delete(`http://127.0.0.1:8000/api/employees/${id}/`)
+        //   .then((res) => {
+        //     console.log(res);
+        //     getEmployeesData();
+        //   });
+        dispatch(deleteEmpData(empid,id));
       } else {
         swal({
           title: "Cancelled",
@@ -214,8 +240,8 @@ function Employee() {
   const totalPages = Math.ceil(totalItemPerPages / itemPerpage);
 
   const getPageNumbers = () => {
-    const totalNumPages = []; 
-    for(let i=1;i<=totalPages;i++){
+    const totalNumPages = [];
+    for (let i = 1; i <= totalPages; i++) {
       totalNumPages.push(i);
     }
     return totalNumPages;
@@ -246,7 +272,9 @@ function Employee() {
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
             />
-            <p className="altP" style={{marginLeft:"83px"}}>{errors.firstName}</p>
+            <p className="altP" style={{ marginLeft: "83px" }}>
+              {errors.firstName}
+            </p>
             <label htmlFor="last_name" className="label">
               Email<span className="text-danger">*</span> :{" "}
             </label>
@@ -258,7 +286,9 @@ function Employee() {
               value={Email}
               onChange={(e) => setEmail(e.target.value)}
             />
-            <p className="altP" style={{marginLeft:"33px"}}>{errors.email}</p>
+            <p className="altP" style={{ marginLeft: "33px" }}>
+              {errors.email}
+            </p>
             <label htmlFor="" className="label" style={{ float: "left" }}>
               Hire Date<span className="text-danger">*</span> :
             </label>
@@ -267,9 +297,11 @@ function Employee() {
               className="inptfld"
               value={hireDate}
               onChange={(e) => setHireDate(e.target.value)}
-              style={{ marginLeft: "10px",width:"185px" }}
+              style={{ marginLeft: "10px", width: "185px" }}
             />
-            <p className="altP" style={{marginLeft:"55px"}}>{errors.hireDate}</p>
+            <p className="altP" style={{ marginLeft: "55px" }}>
+              {errors.hireDate}
+            </p>
           </div>
           <div className="col-lg-6 rightDiv">
             <label htmlFor="" className="label">
@@ -282,7 +314,9 @@ function Employee() {
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
             />
-            <p className="altP" style={{marginLeft:"80px"}}>{errors.lastName}</p>
+            <p className="altP" style={{ marginLeft: "80px" }}>
+              {errors.lastName}
+            </p>
             <label htmlFor="" className="label">
               Phone No.<span className="text-danger">*</span> :{" "}
             </label>
@@ -293,8 +327,10 @@ function Employee() {
               value={Phnum}
               onChange={(e) => setPhnum(e.target.value)}
             />
-            <p className="altP" style={{marginLeft:"88px"}}>{errors.Phnum}</p>
-            <p className="altP" >{errors.default}</p>
+            <p className="altP" style={{ marginLeft: "88px" }}>
+              {errors.Phnum}
+            </p>
+            <p className="altP">{errors.default}</p>
           </div>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <button onClick={handleBack} id="BckBtn">
@@ -323,30 +359,41 @@ function Employee() {
                 </tr>
               </thead>
               <tbody>
-                {emplyData.slice((current - 1) * itemPerpage, current * itemPerpage).map((item, i) => {
-                  const itemIndex = (current - 1) * itemPerpage + i + 1;
-                  return (
-                    <tr key={item.id} className="tbRw">
-                      <th scope="row">{itemIndex}</th>
-                      <td>
-                        {" "}
-                        <Link id="lnk" to={`/empComplain/${item.id}/${item.first_name}`}>
-                        {item.first_name}
-                        </Link>
-                      </td>
-                      <td>{item.last_name}</td>
-                      <td>{item.email}</td>
-                      <td>{item.phone}</td>
-                      <td>{item.hire_date}</td>
-                      <td>
-                        <Space wrap>
-                            <EditFilled onClick={() => handleEdit(item.id)} id="updateBtn"/>
-                            <DeleteFilled onClick={() => handleDeleteEmp(item.id)} id="deleteBtn"/>
-                        </Space>
-                      </td>
-                    </tr>
-                  );
-                })}
+                {emplyData
+                  .slice((current - 1) * itemPerpage, current * itemPerpage)
+                  .map((item, i) => {
+                    const itemIndex = (current - 1) * itemPerpage + i + 1;
+                    return (
+                      <tr key={item.id} className="tbRw">
+                        <th scope="row">{itemIndex}</th>
+                        <td>
+                          {" "}
+                          <Link
+                            id="lnk"
+                            to={`/empComplain/${item.id}/${item.first_name}`}
+                          >
+                            {item.first_name}
+                          </Link>
+                        </td>
+                        <td>{item.last_name}</td>
+                        <td>{item.email}</td>
+                        <td>{item.phone}</td>
+                        <td>{item.hire_date}</td>
+                        <td>
+                          <Space wrap>
+                            <EditFilled
+                              onClick={() => handleEdit(item.id)}
+                              id="updateBtn"
+                            />
+                            <DeleteFilled
+                              onClick={() => handleDeleteEmp(item.id)}
+                              id="deleteBtn"
+                            />
+                          </Space>
+                        </td>
+                      </tr>
+                    );
+                  })}
               </tbody>
             </table>
             {/* <div className="pagination">
@@ -379,48 +426,50 @@ function Employee() {
               )}
             </div> */}
             <div className="pagination">
-            {totalPages > 1 && (
-              <div className="mainPage">
-                <button
-                  onClick={() => setCurrent(current - 1)}
-                  className="next-prev-btn"
-                  disabled={current === 1}
-                >
-                  Previous
-                </button>
-                {current > pagesToShow + 1 && (
-                  <>
-                    <button onClick={() => setCurrent(1)}>1</button>
-                    {current > pagesToShow + 2 && <span>...</span>}
-                  </>
-                )}
-                {visiblePageNumbers.map((pageNumber) => (
+              {totalPages > 1 && (
+                <div className="mainPage">
                   <button
-                    key={pageNumber}
-                    className={pageNumber === current ? "active" : ""}
-                    onClick={() => setCurrent(pageNumber)}
+                    onClick={() => setCurrent(current - 1)}
+                    className="next-prev-btn"
+                    disabled={current === 1}
                   >
-                    {pageNumber}
+                    Previous
                   </button>
-                ))}
-                {current < totalPages - pagesToShow && (
-                  <>
-                    {current < totalPages - pagesToShow - 1 && <span>...</span>}
-                    <button onClick={() => setCurrent(totalPages)}>
-                      {totalPages}
+                  {current > pagesToShow + 1 && (
+                    <>
+                      <button onClick={() => setCurrent(1)}>1</button>
+                      {current > pagesToShow + 2 && <span>...</span>}
+                    </>
+                  )}
+                  {visiblePageNumbers.map((pageNumber) => (
+                    <button
+                      key={pageNumber}
+                      className={pageNumber === current ? "active" : ""}
+                      onClick={() => setCurrent(pageNumber)}
+                    >
+                      {pageNumber}
                     </button>
-                  </>
-                )}
-                <button
-                  onClick={() => setCurrent(current + 1)}
-                  className="next-prev-btn"
-                  disabled={current === totalPages}
-                >
-                  Next
-                </button>
-              </div>
-            )}
-          </div>
+                  ))}
+                  {current < totalPages - pagesToShow && (
+                    <>
+                      {current < totalPages - pagesToShow - 1 && (
+                        <span>...</span>
+                      )}
+                      <button onClick={() => setCurrent(totalPages)}>
+                        {totalPages}
+                      </button>
+                    </>
+                  )}
+                  <button
+                    onClick={() => setCurrent(current + 1)}
+                    className="next-prev-btn"
+                    disabled={current === totalPages}
+                  >
+                    Next
+                  </button>
+                </div>
+              )}
+            </div>
           </>
         ) : (
           <h3>There are no employees in this company</h3>

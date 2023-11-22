@@ -6,23 +6,28 @@ import axios from "axios";
 import "./Style.css";
 import swal from "sweetalert";
 import ReactReadMoreReadLess from "react-read-more-read-less";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteCmplnApi, getCmplnApiData } from "../../Redux/Actions/Complain_Action";
 
 const AddComplain = () => {
   const { id, empName } = useParams();
   const [empComplains, setEmpComplains] = useState([]);
 
-  const getEmpComplain = () => {
-    axios.get(`http://127.0.0.1:8000/api/empcomplains/${id}/`).then((res) => {
-      console.log(res.data);
-      setEmpComplains(res.data);
-    });
-  };
+  const dispatch = useDispatch();
+  const cmplnData = useSelector((state)=>state.getEmpCmplnApiReducer.dataList);
+
+  // const getEmpComplain = () => {
+  //   axios.get(`http://127.0.0.1:8000/api/empcomplains/${id}/`).then((res) => {
+  //     console.log(res.data);
+  //     setEmpComplains(res.data);
+  //   });
+  // };
 
   const handleBackBtn = () => {
     window.history.back();
   };
 
-  const handleCmpDelete = (id) => {
+  const handleCmpDelete = (delId) => {
     console.log(id);
     swal({
       title: "Are you sure? ",
@@ -40,12 +45,13 @@ const AddComplain = () => {
           timer: 2000,
           buttons: false,
         });
-        axios
-          .delete(`http://127.0.0.1:8000/api/complains/${id}/`)
-          .then((res) => {
-            console.log(res);
-            getEmpComplain();
-          });
+        // axios
+        //   .delete(`http://127.0.0.1:8000/api/complains/${id}/`)
+        //   .then((res) => {
+        //     console.log(res);
+        //     getEmpComplain();
+        //   });
+        dispatch(deleteCmplnApi(delId,id))
       } else {
         swal({
           title: "Cancelled",
@@ -57,8 +63,15 @@ const AddComplain = () => {
     });
   };
 
+  useEffect(()=>{
+    if(cmplnData!==undefined){
+      setEmpComplains(cmplnData);
+    }
+  },[cmplnData])
+
   useEffect(() => {
-    getEmpComplain();
+    // getEmpComplain();
+    dispatch(getCmplnApiData(id))
   }, []);
 
   return (
@@ -76,7 +89,7 @@ const AddComplain = () => {
                   S.No.
                 </th>
                 <th scope="col" className="tbTh">
-                  Employee Name
+                  Title
                 </th>
                 <th scope="col" className="tbTh">
                   Description
@@ -94,8 +107,7 @@ const AddComplain = () => {
                 return (
                   <tr key={item.id} className="tbRw">
                     <th scope="row">{i + 1}</th>
-                    <td>{empName}</td>
-                    {/* <td>{item.discriptions}</td> */}
+                    <td>{item.title}</td>
                     <ReactReadMoreReadLess
                       charLimit={60}
                       readMoreText={"Read more..."}
